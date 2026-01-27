@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import asyncHandler from "../../shared/utils/asyncHandler";
-import { success, fail } from "../../shared/utils/response";
-import { OrdersService } from "./orders.service";
 import { prisma } from "../../database/prisma";
+import asyncHandler from "../../shared/utils/asyncHandler";
+import { fail, success } from "../../shared/utils/response";
+import { OrdersService } from "./orders.service";
 
 export const OrdersController = {
   create: asyncHandler(async (req: Request, res: Response) => {
