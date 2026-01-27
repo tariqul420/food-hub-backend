@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import ApiError from "../errors/ApiError";
+import ApiError from "../errors/api-error";
 
 export default function requireRole(...roles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {

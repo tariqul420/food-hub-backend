@@ -5,7 +5,6 @@ import { setupAuth } from "./modules/auth/auth";
 
 async function startServer() {
   const auth = await setupAuth();
-  // mount auth handler after initialization
   app.all("/api/auth/*splat", toNodeHandler(auth));
 
   const port = env.port;

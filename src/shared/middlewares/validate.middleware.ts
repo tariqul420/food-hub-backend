@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
-import ApiError from "../errors/ApiError";
+import ApiError from "../errors/api-error";
 
 export default function validate(
   req: Request,
