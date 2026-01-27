@@ -3,13 +3,7 @@ import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
 import { logger } from "./config/logger";
 import { limiter } from "./config/rate-limit";
-import { adminRoutes } from "./modules/admin/users.routes";
-import { authRoutes } from "./modules/health/health.route";
-import { mealsRoutes } from "./modules/meals/meals.routes";
-import { ordersRoutes } from "./modules/orders/orders.routes";
-import { providerRoutes } from "./modules/provider/provider.routes";
-import { providersRoutes } from "./modules/providers/providers.routes";
-import { reviewsRoutes } from "./modules/reviews/reviews.routes";
+import apiRoutes from "./routes/index";
 import { errorHandler } from "./shared/middlewares/error.middleware";
 import { notFound } from "./shared/middlewares/not-found.middleware";
 
@@ -38,14 +32,8 @@ app.get("/", (_req: Request, res: Response) => {
   });
 });
 
-// routes
-app.use("/api/health", authRoutes);
-app.use("/api/meals", mealsRoutes);
-app.use("/api/providers", providersRoutes);
-app.use("/api/orders", ordersRoutes);
-app.use("/api/provider", providerRoutes);
-app.use("/api/reviews", reviewsRoutes);
-app.use("/api/admin", adminRoutes);
+// API routes (versioned)
+app.use("/api", apiRoutes);
 
 // unhandled routes
 app.use(notFound);
