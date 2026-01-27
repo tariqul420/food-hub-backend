@@ -1,10 +1,13 @@
 import { Router } from "express";
+import authorize, {
+  UserRole,
+} from "../../shared/middlewares/authorize.middleware";
 import { OrdersController } from "./orders.controller";
 
 const router = Router();
 
-router.post("/", OrdersController.create);
-router.get("/", OrdersController.list);
-router.get("/:id", OrdersController.get);
+router.post("/", authorize(UserRole.CUSTOMER), OrdersController.create);
+router.get("/", authorize(), OrdersController.list);
+router.get("/:id", authorize(), OrdersController.get);
 
 export { router as ordersRoutes };
