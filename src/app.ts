@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
 import { logger } from "./config/logger";
+import { limiter } from "./config/rate-limit";
 import { adminRoutes } from "./modules/admin/users.routes";
 import { authRoutes } from "./modules/health/health.route";
 import { mealsRoutes } from "./modules/meals/meals.routes";
@@ -19,6 +20,12 @@ app.use(express.json());
 app.use(helmet);
 app.use(logger);
 app.use(cors);
+app.use(limiter);
+
+// trust proxy when behind proxies (load balancers)
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
 
 // Home page route
 app.get("/", (_req: Request, res: Response) => {
