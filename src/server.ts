@@ -1,11 +1,9 @@
-import { toNodeHandler } from "better-auth/node";
 import app from "./app";
 import { env } from "./config/env";
 import { setupAuth } from "./modules/auth/auth";
 
 async function startServer() {
-  const auth = await setupAuth();
-  app.all("/api/auth/*splat", toNodeHandler(auth));
+  await setupAuth();
 
   const port = env.port;
   app.listen(port, () => {

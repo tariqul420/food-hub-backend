@@ -1,8 +1,10 @@
+import { toNodeHandler } from "better-auth/node";
 import express, { Application, Request, Response } from "express";
 import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
 import { logger } from "./config/logger";
 import { limiter } from "./config/rate-limit";
+import { auth } from "./modules/auth/auth";
 import apiRoutes from "./routes/index";
 import { errorHandler } from "./shared/middlewares/error.middleware";
 import { notFound } from "./shared/middlewares/not-found.middleware";
@@ -20,6 +22,13 @@ app.use(limiter);
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
+
+app.all("/api/auth/*splat", (req, res, next) => {
+  if (!auth) {
+    return res.status(503).json({ success: false, message: "Auth not ready" });
+  }
+  return toNodeHandler(auth)(req, res);
+});
 
 // Home page route
 app.get("/", (_req: Request, res: Response) => {
