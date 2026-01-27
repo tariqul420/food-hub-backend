@@ -5,7 +5,7 @@ import { helmet } from "./config/helmet";
 import { logger } from "./config/logger";
 import { limiter } from "./config/rate-limit";
 import { auth } from "./modules/auth/auth";
-import apiRoutes from "./routes/index";
+import { apiRoutes } from "./routes/index";
 import { errorHandler } from "./shared/middlewares/error.middleware";
 import { notFound } from "./shared/middlewares/not-found.middleware";
 
@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
 
-app.all("/api/auth/*splat", (req, res, next) => {
+app.all("/api/auth/*splat", (req: Request, res: Response) => {
   if (!auth) {
     return res.status(503).json({ success: false, message: "Auth not ready" });
   }

@@ -22,4 +22,4 @@ v1.use("/health", healthRoutes);
 
 router.use("/v1", v1);
 
-export default router;
+export const apiRoutes = router;
