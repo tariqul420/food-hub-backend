@@ -1,4 +1,7 @@
-export const getVerificationEmailTemplate = (user: { name?: string; email: string }, url: string) => {
+export const getVerificationEmailTemplate = (
+  user: { name?: string; email: string },
+  url: string,
+) => {
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +46,10 @@ If you didn't create an account, ignore this email.`;
   return { html, text };
 };
 
-export const getPasswordResetEmailTemplate = (user: { name?: string; email: string }, url: string) => {
+export const getPasswordResetEmailTemplate = (
+  user: { name?: string; email: string },
+  url: string,
+) => {
   const html = `
 <!DOCTYPE html>
 <html lang="en">

@@ -1,11 +1,14 @@
+import { toNodeHandler } from "better-auth/node";
 import app from "./app";
 import { env } from "./config/env";
-import { initAuth } from "../lib/auth";
+import { setupAuth } from "./modules/auth/auth";
 
 async function startServer() {
-  
-await initAuth();
-const port = env.port;
+  const auth = await setupAuth();
+  // mount auth handler after initialization
+  app.all("/api/auth/*splat", toNodeHandler(auth));
+
+  const port = env.port;
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });

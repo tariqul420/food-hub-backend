@@ -1,3 +1,4 @@
+// `toNodeHandler` is mounted in `server.ts` after auth is initialized.
 import express, { Application, Request, Response } from "express";
 import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
@@ -5,8 +6,6 @@ import { logger } from "./config/logger";
 import { authRoutes } from "./features/health/health.route";
 import { errorHandler } from "./middlewares/error.middleware";
 import { notFound } from "./middlewares/not-found.middleware";
-import { auth } from "../lib/auth";
-import { toNodeHandler } from "better-auth/node";
 
 // app initialization
 const app: Application = express();
@@ -28,7 +27,6 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 // routes
-app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use("/api/health", authRoutes);
 
 // unhandled routes

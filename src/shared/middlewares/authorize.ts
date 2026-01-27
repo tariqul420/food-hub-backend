@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { auth } from "../../lib/auth";
+import { auth } from "../../modules/auth/auth";
 
 export enum UserRole {
-    USER = "USER",
-    ADMIN = "ADMIN"
+  USER = "USER",
+  ADMIN = "ADMIN",
 }
 
 const authorize = (...roles: UserRole[]) => {
