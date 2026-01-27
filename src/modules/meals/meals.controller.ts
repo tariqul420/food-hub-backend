@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "../../shared/utils/asyncHandler";
-import { success, fail } from "../../shared/utils/response";
+import { fail, success } from "../../shared/utils/response";
 import { MealsService } from "./meals.service";
 
 export const MealsController = {
