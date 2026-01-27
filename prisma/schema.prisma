@@ -3,73 +3,197 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String
-    email         String
-    emailVerified Boolean   @default(false)
-    image         String?
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
-    sessions      Session[]
-    accounts      Account[]
-    role          Role    @default(USER)
+  id              String           @id @default(cuid())
+  name            String
+  email           String
+  emailVerified   Boolean          @default(false)
+  image           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  sessions        Session[]
+  accounts        Account[]
+  providerProfile ProviderProfile?
+  orders          Order[]
+  reviews         Review[]
+  role            Role             @default(USER)
 
-    @@unique([email])
-    @@map("user")
+  @@unique([email])
+  @@map("user")
 }
 
 model Session {
-    id        String   @id @default(cuid())
-    expiresAt DateTime
-    token     String   @unique
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    ipAddress String?
-    userAgent String?
-    userId    String   
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId])
-    @@map("session")
+  @@index([userId])
+  @@map("session")
 }
 
 model Account {
-    id                    String    @id @default(cuid())
-    accountId             String
-    providerId            String
-    userId                String    
-    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    accessToken           String?
-    refreshToken          String?
-    idToken               String?
-    accessTokenExpiresAt  DateTime?
-    refreshTokenExpiresAt DateTime?
-    scope                 String?
-    password              String?
-    createdAt             DateTime  @default(now())
-    updatedAt             DateTime  @updatedAt
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-    @@index([userId])
-    @@map("account")
+  @@index([userId])
+  @@map("account")
 }
 
 model Verification {
-    id         String   @id @default(cuid())
-    identifier String
-    value      String
-    expiresAt  DateTime
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-    @@index([identifier])
-    @@map("verification")
+  @@index([identifier])
+  @@map("verification")
 }
 
 enum Role {
-    USER
-    ADMIN
+  USER
+  ADMIN
+}
+
+model ProviderProfile {
+  id          String   @id @default(cuid())
+  userId      String // references `User.id` (one-to-one)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  phone       String?
+  email       String?
+  address     String?
+  city        String?
+  country     String?
+  logo        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  meals  Meal[]
+  orders Order[]
+
+  @@unique([userId])
+  @@index([userId])
+  @@map("provider_profiles")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  meals Meal[]
+
+  @@map("categories")
+}
+
+model Meal {
+  id                String   @id @default(cuid())
+  providerProfileId String
+  categoryId        String?
+  title             String
+  description       String?
+  price             Float
+  currency          String   @default("USD")
+  image             String?
+  isAvailable       Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  category   Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  provider   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  @@index([providerProfileId])
+  @@map("meals")
+}
+
+enum OrderStatus {
+  PLACED
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  customerId        String?
+  providerProfileId String?
+  deliveryAddress   String
+  total             Float
+  status            OrderStatus @default(PLACED)
+  placedAt          DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  customer User?            @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  provider ProviderProfile? @relation(fields: [providerProfileId], references: [id], onDelete: SetNull)
+
+  items OrderItem[]
+
+  @@index([customerId])
+  @@index([providerProfileId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  mealId    String?
+  mealTitle String
+  unitPrice Float
+  quantity  Int
+  subtotal  Float
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  meal  Meal? @relation(fields: [mealId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([mealId])
+  @@map("order_items")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  mealId     String
+  customerId String?
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
+
+  customer User? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([mealId])
+  @@map("reviews")
 }

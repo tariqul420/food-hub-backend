@@ -1,8 +1,8 @@
 import express, { Application, Request, Response } from "express";
 import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
+import { logger } from "./config/logger";
 import { authRoutes } from "./modules/health/health.route";
-import { logger } from "./shared/logger/logger";
 import { errorHandler } from "./shared/middlewares/error.middleware";
 import { notFound } from "./shared/middlewares/not-found.middleware";
 
