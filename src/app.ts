@@ -2,13 +2,13 @@ import express, { Application, Request, Response } from "express";
 import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
 import { logger } from "./config/logger";
+import { adminRoutes } from "./modules/admin/users.routes";
 import { authRoutes } from "./modules/health/health.route";
 import { mealsRoutes } from "./modules/meals/meals.routes";
-import { providersRoutes } from "./modules/providers/providers.routes";
 import { ordersRoutes } from "./modules/orders/orders.routes";
 import { providerRoutes } from "./modules/provider/provider.routes";
+import { providersRoutes } from "./modules/providers/providers.routes";
 import { reviewsRoutes } from "./modules/reviews/reviews.routes";
-import { adminRoutes } from "./modules/admin/users.routes";
 import { errorHandler } from "./shared/middlewares/error.middleware";
 import { notFound } from "./shared/middlewares/not-found.middleware";
 
