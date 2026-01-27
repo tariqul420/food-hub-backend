@@ -10,7 +10,8 @@ export const AdminUsersController = {
   }),
 
   update: asyncHandler(async (req: Request, res: Response) => {
-    const updated = await AdminUsersService.update(req.params.id, req.body);
+    const id = String(req.params.id);
+    const updated = await AdminUsersService.update(id, req.body);
     return success(res, updated, "User updated");
   }),
 };

@@ -10,7 +10,8 @@ export const ProvidersController = {
   }),
 
   get: asyncHandler(async (req: Request, res: Response) => {
-    const provider = await ProvidersService.get(req.params.id);
+    const id = String(req.params.id);
+    const provider = await ProvidersService.get(id);
     if (!provider) return fail(res, 404, "Provider not found");
     return success(res, provider);
   }),

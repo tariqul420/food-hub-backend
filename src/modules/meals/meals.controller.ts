@@ -10,7 +10,8 @@ export const MealsController = {
   }),
 
   get: asyncHandler(async (req: Request, res: Response) => {
-    const meal = await MealsService.get(req.params.id);
+    const id = String(req.params.id);
+    const meal = await MealsService.get(id);
     if (!meal) return fail(res, 404, "Meal not found");
     return success(res, meal);
   }),
@@ -22,12 +23,14 @@ export const MealsController = {
   }),
 
   update: asyncHandler(async (req: Request, res: Response) => {
-    const updated = await MealsService.update(req.params.id, req.body);
+    const id = String(req.params.id);
+    const updated = await MealsService.update(id, req.body);
     return success(res, updated, "Meal updated");
   }),
 
   remove: asyncHandler(async (req: Request, res: Response) => {
-    await MealsService.remove(req.params.id);
+    const id = String(req.params.id);
+    await MealsService.remove(id);
     return success(res, null, "Meal deleted");
   }),
 };

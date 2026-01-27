@@ -11,7 +11,7 @@ export default function validate(
   if (!errors.isEmpty()) {
     const msg = errors
       .array()
-      .map((e) => `${e.param}: ${e.msg}`)
+      .map((e: any) => `${e.param}: ${e.msg}`)
       .join(", ");
     return next(new ApiError(400, msg));
   }

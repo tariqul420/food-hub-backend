@@ -12,7 +12,7 @@ export const ReviewsController = {
   }),
 
   listByMeal: asyncHandler(async (req: Request, res: Response) => {
-    const mealId = req.params.mealId;
+    const mealId = String(req.params.mealId);
     const reviews = await ReviewsService.listByMeal(mealId);
     return success(res, reviews);
   }),

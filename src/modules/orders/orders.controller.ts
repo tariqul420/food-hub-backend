@@ -49,14 +49,16 @@ export const OrdersController = {
   }),
 
   get: asyncHandler(async (req: Request, res: Response) => {
-    const order = await OrdersService.get(req.params.id);
+    const id = String(req.params.id);
+    const order = await OrdersService.get(id);
     if (!order) return fail(res, 404, "Order not found");
     return success(res, order);
   }),
 
   updateStatus: asyncHandler(async (req: Request, res: Response) => {
     const { status } = req.body;
-    const updated = await OrdersService.updateStatus(req.params.id, status);
+    const id = String(req.params.id);
+    const updated = await OrdersService.updateStatus(id, status);
     return success(res, updated, "Order status updated");
   }),
 };
