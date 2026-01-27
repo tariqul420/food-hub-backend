@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import asyncHandler from "../../shared/utils/asyncHandler";
+import asyncHandler from "../../shared/utils/async-handler";
 import { fail, success } from "../../shared/utils/response";
 import { ProvidersService } from "./providers.service";
 

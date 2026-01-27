@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../../database/prisma";
-import asyncHandler from "../../shared/utils/asyncHandler";
+import asyncHandler from "../../shared/utils/async-handler";
 import { fail, success } from "../../shared/utils/response";
 import { OrdersService } from "./orders.service";
 
