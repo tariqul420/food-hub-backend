@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'PROVIDER', 'ADMIN');
 
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PLACED', 'PREPARING', 'READY', 'DELIVERED', 'CANCELLED');
@@ -13,7 +13,7 @@ CREATE TABLE "user" (
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'USER',
+    "role" "Role" NOT NULL DEFAULT 'CUSTOMER',
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
