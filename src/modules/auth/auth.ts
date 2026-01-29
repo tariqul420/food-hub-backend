@@ -1,11 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "../../database/prisma";
-import { sendEmail } from "../../shared/email/email-service";
-import {
-  getPasswordResetEmailTemplate,
-  getVerificationEmailTemplate,
-} from "../../shared/email/email-templates";
 
 export async function initAuth() {
   return betterAuth({
@@ -26,16 +21,6 @@ export async function initAuth() {
     },
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: true,
-      sendResetPassword: async ({ user, url }) => {
-        const { html, text } = getPasswordResetEmailTemplate(user, url);
-        await sendEmail({
-          to: user.email,
-          subject: "Reset Your Password",
-          text,
-          html,
-        });
-      },
     },
     socialProviders: {
       google: {
@@ -44,18 +29,6 @@ export async function initAuth() {
         clientId: process.env.GOOGLE_CLIENT_ID as string,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       },
-    },
-    emailVerification: {
-      sendVerificationEmail: async ({ user, url }) => {
-        const { html, text } = getVerificationEmailTemplate(user, url);
-        await sendEmail({
-          to: user.email,
-          subject: "Verify Your Email Address",
-          text,
-          html,
-        });
-      },
-      sendOnSignIn: true,
     },
     rateLimit: {
       window: 10,
