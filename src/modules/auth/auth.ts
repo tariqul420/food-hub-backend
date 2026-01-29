@@ -22,14 +22,6 @@ export async function initAuth() {
     emailAndPassword: {
       enabled: true,
     },
-    socialProviders: {
-      google: {
-        accessType: "offline",
-        prompt: "select_account consent",
-        clientId: process.env.GOOGLE_CLIENT_ID as string,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      },
-    },
     rateLimit: {
       window: 10,
       max: 100,
