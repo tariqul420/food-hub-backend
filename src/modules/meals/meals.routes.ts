@@ -7,6 +7,11 @@ import { MealsController } from "./meals.controller";
 const router = Router();
 
 router.get("/", MealsController.list);
+router.get(
+  "/provider/:providerId",
+  authorize(UserRole.PROVIDER),
+  MealsController.listByProvider,
+);
 router.get("/:id", MealsController.get);
 router.post("/", authorize(UserRole.PROVIDER), MealsController.create);
 router.put("/:id", authorize(UserRole.PROVIDER), MealsController.update);

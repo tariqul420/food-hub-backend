@@ -8,26 +8,27 @@ export const MealsController = {
     const meals = await MealsService.list(req.query);
     return success(res, meals);
   }),
-
+  listByProvider: asyncHandler(async (req: Request, res: Response) => {
+    const providerId = String(req.params.providerId);
+    const meals = await MealsService.listByProvider(providerId, req.query);
+    return success(res, meals);
+  }),
   get: asyncHandler(async (req: Request, res: Response) => {
     const id = String(req.params.id);
     const meal = await MealsService.get(id);
     if (!meal) return fail(res, 404, "Meal not found");
     return success(res, meal);
   }),
-
   create: asyncHandler(async (req: Request, res: Response) => {
     const data = req.body;
     const created = await MealsService.create(data);
     return success(res, created, "Meal created");
   }),
-
   update: asyncHandler(async (req: Request, res: Response) => {
     const id = String(req.params.id);
     const updated = await MealsService.update(id, req.body);
     return success(res, updated, "Meal updated");
   }),
-
   remove: asyncHandler(async (req: Request, res: Response) => {
     const id = String(req.params.id);
     await MealsService.remove(id);
