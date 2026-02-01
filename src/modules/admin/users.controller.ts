@@ -4,8 +4,8 @@ import { success } from "../../shared/utils/response";
 import { AdminUsersService } from "./users.service";
 
 export const AdminUsersController = {
-  list: asyncHandler(async (_req: Request, res: Response) => {
-    const users = await AdminUsersService.list();
+  list: asyncHandler(async (req: Request, res: Response) => {
+    const users = await AdminUsersService.list(req.query);
     return success(res, users);
   }),
 
