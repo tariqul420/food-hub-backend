@@ -1,7 +1,7 @@
 import { getPagination } from "../../shared/utils/pagination";
-import { UsersRepository } from "./users.repository";
+import { CategoriesRepository } from "./categories.repository";
 
-export const AdminUsersService = {
+export const CategoriesService = {
   list: async (query: any = {}) => {
     const { page, limit, skip, take } = getPagination(query);
 
@@ -9,21 +9,18 @@ export const AdminUsersService = {
 
     const where = search
       ? {
-          OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { email: { contains: search, mode: "insensitive" } },
-          ],
+          OR: [{ name: { contains: search, mode: "insensitive" } }],
         }
       : {};
 
     const [users, total] = await Promise.all([
-      UsersRepository.find({
+      CategoriesRepository.find({
         where,
         skip,
         take,
         orderBy: { updatedAt: "desc" },
       }),
-      UsersRepository.count(where),
+      CategoriesRepository.count(where),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -39,6 +36,4 @@ export const AdminUsersService = {
       },
     };
   },
-
-  update: (id: string, data: any) => UsersRepository.update(id, data),
 };
