@@ -7,11 +7,15 @@ import { OrdersService } from "./orders.service";
 export const OrdersController = {
   create: asyncHandler(async (req: Request, res: Response) => {
     const { customerId, providerProfileId, deliveryAddress, items } = req.body;
-    if (!items || !Array.isArray(items) || items.length === 0) return fail(res, 400, "No items provided");
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return fail(res, 400, "No items provided");
+    }
 
     // fetch meals to compute prices
     const mealIds = items.map((i: any) => i.mealId).filter(Boolean);
-    const meals = await prisma.meal.findMany({ where: { id: { in: mealIds } } });
+    const meals = await prisma.meal.findMany({
+      where: { id: { in: mealIds } },
+    });
     const mealMap: any = {};
     meals.forEach((m) => (mealMap[m.id] = m));
 
@@ -45,6 +49,12 @@ export const OrdersController = {
   list: asyncHandler(async (req: Request, res: Response) => {
     const customerId = req.query.customerId as string | undefined;
     const orders = await OrdersService.list(customerId);
+    return success(res, orders);
+  }),
+
+  listByProvider: asyncHandler(async (req: Request, res: Response) => {
+    const providerId = String(req.params.providerId);
+    const orders = await OrdersService.listByProvider(providerId, req.query);
     return success(res, orders);
   }),
 

@@ -33,11 +33,11 @@ app.all("/api/auth/*splat", (req: Request, res: Response) => {
 // Home page route
 app.get("/", (_req: Request, res: Response) => {
   res.status(200).json({
-    title: "Welcome to your Express app",
+    title: "Food Hub API",
     description:
-      "Built with StackKit - A production-ready Express template with TypeScript, security, and best practices.",
+      "Backend API for Food Hub — manage meals, providers, orders, and reviews.",
     version: "1.0.0",
-    docs: "https://github.com/tariqul420/stackkit",
+    docs: "https://github.com/tariqul420/food-hub-backend",
   });
 });
 

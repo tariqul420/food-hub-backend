@@ -7,6 +7,11 @@ import { OrdersController } from "./orders.controller";
 const router = Router();
 
 router.post("/", authorize(UserRole.CUSTOMER), OrdersController.create);
+router.get(
+  "/provider/:providerId",
+  authorize(UserRole.PROVIDER),
+  OrdersController.listByProvider,
+);
 router.get("/", authorize(), OrdersController.list);
 router.get("/:id", authorize(), OrdersController.get);
 
