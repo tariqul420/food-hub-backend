@@ -12,6 +12,7 @@ router.get(
   authorize(UserRole.PROVIDER),
   OrdersController.listByProvider,
 );
+router.get("/admin", authorize(UserRole.ADMIN), OrdersController.listByAdmin);
 router.get("/", authorize(), OrdersController.list);
 router.get("/:id", authorize(), OrdersController.get);
 

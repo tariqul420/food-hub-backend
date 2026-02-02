@@ -58,6 +58,11 @@ export const OrdersController = {
     return success(res, orders);
   }),
 
+  listByAdmin: asyncHandler(async (req: Request, res: Response) => {
+    const orders = await OrdersService.listByAdmin(req.query);
+    return success(res, orders);
+  }),
+
   get: asyncHandler(async (req: Request, res: Response) => {
     const id = String(req.params.id);
     const order = await OrdersService.get(id);

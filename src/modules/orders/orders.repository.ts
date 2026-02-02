@@ -18,6 +18,17 @@ export const OrdersRepository = {
       orderBy: opts.orderBy,
     });
   },
+  findByAdmin: (
+    opts: { where?: any; skip?: number; take?: number; orderBy?: any } = {},
+  ) => {
+    return prisma.order.findMany({
+      where: opts.where,
+      include: { items: true },
+      skip: opts.skip,
+      take: opts.take,
+      orderBy: opts.orderBy,
+    });
+  },
   findByCustomer: (customerId?: string) =>
     prisma.order.findMany({
       where: customerId ? { customerId } : {},
