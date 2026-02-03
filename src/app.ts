@@ -3,7 +3,6 @@ import express, { Application, Request, Response } from "express";
 import { cors } from "./config/cors";
 import { helmet } from "./config/helmet";
 import { logger } from "./config/logger";
-import { limiter } from "./config/rate-limit";
 import { auth } from "./modules/auth/auth";
 import { apiRoutes } from "./routes/index";
 import { errorHandler } from "./shared/middlewares/error.middleware";
@@ -16,7 +15,7 @@ app.use(express.json());
 app.use(helmet);
 app.use(logger);
 app.use(cors);
-app.use(limiter);
+// app.use(limiter);
 
 // trust proxy when behind proxies (load balancers)
 if (process.env.NODE_ENV === "production") {

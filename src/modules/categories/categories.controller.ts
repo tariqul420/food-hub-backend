@@ -4,6 +4,10 @@ import { success } from "../../shared/utils/response";
 import { CategoriesService } from "./categories.service";
 
 export const CategoriesController = {
+  list: asyncHandler(async (req: Request, res: Response) => {
+    const categories = await CategoriesService.list();
+    return success(res, categories);
+  }),
   listByAdmin: asyncHandler(async (req: Request, res: Response) => {
     const categories = await CategoriesService.listByAdmin(req.query);
     return success(res, categories);

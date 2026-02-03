@@ -4,6 +4,7 @@ import { CategoriesController } from "./categories.controller";
 
 const router = Router();
 
+router.get("/", CategoriesController.list);
 router.get(
   "/admin",
   authorize(UserRole.ADMIN),

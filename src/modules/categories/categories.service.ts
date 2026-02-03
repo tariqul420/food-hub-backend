@@ -2,6 +2,9 @@ import { getPagination } from "../../shared/utils/pagination";
 import { CategoriesRepository } from "./categories.repository";
 
 export const CategoriesService = {
+  list: async () => {
+    return CategoriesRepository.find();
+  },
   listByAdmin: async (query: any = {}) => {
     const { page, limit, skip, take } = getPagination(query);
 

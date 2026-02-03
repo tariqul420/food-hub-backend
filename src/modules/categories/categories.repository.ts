@@ -1,6 +1,7 @@
 import { prisma } from "../../database/prisma";
 
 export const CategoriesRepository = {
+  find: () => prisma.category.findMany(),
   findByAdmin: (opts: {
     where?: any;
     skip?: number;
