@@ -167,7 +167,6 @@ model OrderItem {
   id        String   @id @default(cuid())
   orderId   String
   mealId    String?
-  mealTitle String
   unitPrice Float
   quantity  Int
   subtotal  Float

@@ -11,7 +11,10 @@ export const MealsRepository = {
       where.isAvailable = filters.isAvailable === "true";
     }
     if (filters.q) where.title = { contains: filters.q, mode: "insensitive" };
-    return prisma.meal.findMany({ where });
+    return prisma.meal.findMany({
+      where,
+      include: { provider: true, category: true },
+    });
   },
   findByProvider: async (
     providerId: string,
@@ -28,12 +31,17 @@ export const MealsRepository = {
     const where = { ...(opts.where || {}), providerProfileId: provider.id };
     return prisma.meal.findMany({
       where,
+      include: { provider: true, category: true },
       skip: opts.skip,
       take: opts.take,
       orderBy: opts.orderBy,
     });
   },
-  findById: (id: string) => prisma.meal.findUnique({ where: { id } }),
+  findById: (id: string) =>
+    prisma.meal.findUnique({
+      where: { id },
+      include: { provider: true, category: true },
+    }),
   create: async (data: any) => {
     if (data?.userId) {
       const provider = await prisma.providerProfile.findFirst({

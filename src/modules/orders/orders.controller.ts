@@ -25,7 +25,6 @@ export const OrdersController = {
       const quantity = it.quantity || 1;
       return {
         mealId: it.mealId,
-        mealTitle: meal ? meal.title : it.mealTitle || "",
         unitPrice,
         quantity,
         subtotal: unitPrice * quantity,
@@ -75,5 +74,10 @@ export const OrdersController = {
     const id = String(req.params.id);
     const updated = await OrdersService.updateStatus(id, status);
     return success(res, updated, "Order status updated");
+  }),
+  delete: asyncHandler(async (req: Request, res: Response) => {
+    const id = String(req.params.id);
+    await OrdersService.delete(id);
+    return success(res, null, "Order deleted");
   }),
 };

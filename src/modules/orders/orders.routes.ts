@@ -15,5 +15,7 @@ router.get(
 router.get("/admin", authorize(UserRole.ADMIN), OrdersController.listByAdmin);
 router.get("/", authorize(), OrdersController.list);
 router.get("/:id", authorize(), OrdersController.get);
+router.patch("/:id", authorize(), OrdersController.updateStatus);
+router.delete("/:id", authorize(), OrdersController.delete);
 
 export { router as ordersRoutes };

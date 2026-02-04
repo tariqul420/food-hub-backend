@@ -83,4 +83,5 @@ export const OrdersService = {
   },
   updateStatus: (id: string, status: any) =>
     OrdersRepository.updateStatus(id, status),
+  delete: (id: string) => OrdersRepository.delete(id),
 };
