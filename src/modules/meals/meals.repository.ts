@@ -54,6 +54,19 @@ export const MealsRepository = {
   },
   count: (where?: any) => prisma.meal.count({ where }),
   update: (id: string, data: any) =>
-    prisma.meal.update({ where: { id }, data }),
+    (async () => {
+      if (data?.userId) {
+        const provider = await prisma.providerProfile.findFirst({
+          where: { userId: data.userId },
+        });
+        if (!provider) {
+          throw new Error("Provider profile not found for given userId");
+        }
+        data.providerProfileId = provider.id;
+        delete data.userId;
+      }
+
+      return prisma.meal.update({ where: { id }, data });
+    })(),
   delete: (id: string) => prisma.meal.delete({ where: { id } }),
 };

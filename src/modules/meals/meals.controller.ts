@@ -20,13 +20,16 @@ export const MealsController = {
     return success(res, meal);
   }),
   create: asyncHandler(async (req: Request, res: Response) => {
-    const data = req.body;
+    const data = { ...(req.body || {}) };
+    if ((req as any).user?.id) data.userId = (req as any).user.id;
     const created = await MealsService.create(data);
     return success(res, created, "Meal created");
   }),
   update: asyncHandler(async (req: Request, res: Response) => {
     const id = String(req.params.id);
-    const updated = await MealsService.update(id, req.body);
+    const data = { ...(req.body || {}) };
+    if ((req as any).user?.id) data.userId = (req as any).user.id;
+    const updated = await MealsService.update(id, data);
     return success(res, updated, "Meal updated");
   }),
   remove: asyncHandler(async (req: Request, res: Response) => {
