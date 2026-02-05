@@ -3,6 +3,7 @@ import { prisma } from "../../database/prisma";
 export const MealsRepository = {
   find: (filters: any) => {
     const where: any = {};
+
     if (filters.providerProfileId) {
       where.providerProfileId = filters.providerProfileId;
     }
@@ -10,10 +11,38 @@ export const MealsRepository = {
     if (filters.isAvailable !== undefined) {
       where.isAvailable = filters.isAvailable === "true";
     }
-    if (filters.q) where.title = { contains: filters.q, mode: "insensitive" };
-    const take = filters.take || filters.limit || undefined;
-    const skip = filters.skip || undefined;
-    const orderBy = filters.orderBy || { updatedAt: "desc" };
+
+    const searchTerm = (filters.search ?? filters.q ?? "").toString().trim();
+    if (searchTerm) {
+      where.title = { contains: searchTerm, mode: "insensitive" };
+    }
+
+    const rawTake = filters.take ?? filters.limit ?? undefined;
+    const rawSkip = filters.skip ?? undefined;
+    const take = rawTake != null ? Number(rawTake) : undefined;
+    const skip = rawSkip != null ? Number(rawSkip) : undefined;
+
+    let orderBy: any = filters.orderBy || { updatedAt: "desc" };
+    if (typeof filters.sort === "string") {
+      switch (filters.sort) {
+        case "price_asc":
+          orderBy = { price: "asc" };
+          break;
+        case "price_desc":
+          orderBy = { price: "desc" };
+          break;
+        case "newest":
+          orderBy = { createdAt: "desc" };
+          break;
+        default:
+          if (/^[a-zA-Z0-9_]+_(asc|desc)$/.test(filters.sort)) {
+            const [field, dir] = filters.sort.split("_");
+            orderBy = { [field]: dir as "asc" | "desc" };
+          }
+          break;
+      }
+    }
+
     return prisma.meal.findMany({
       where,
       include: { provider: true, category: true },

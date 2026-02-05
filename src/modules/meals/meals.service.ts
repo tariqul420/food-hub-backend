@@ -1,9 +1,8 @@
 import { getPagination } from "../../shared/utils/pagination";
 import { MealsRepository } from "./meals.repository";
 
-// simple in-memory cache for list endpoints
 const cache: Record<string, { ts: number; data: any }> = {};
-const TTL = 30 * 1000; // 30 seconds
+const TTL = 30 * 1000;
 
 export const MealsService = {
   list: async (filters: any) => {
@@ -25,7 +24,7 @@ export const MealsService = {
       q: search || undefined,
       skip,
       take,
-      orderBy: { updatedAt: "desc" },
+      sort: query.sort || undefined,
     };
 
     const where: any = { providerProfileId: providerId };

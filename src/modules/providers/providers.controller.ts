@@ -1,14 +1,43 @@
 import { Request, Response } from "express";
 import asyncHandler from "../../shared/utils/async-handler";
+import { getPagination } from "../../shared/utils/pagination";
 import { fail, success } from "../../shared/utils/response";
 import { ProvidersService } from "./providers.service";
 
 export const ProvidersController = {
   list: asyncHandler(async (req: Request, res: Response) => {
-    const { limit, skip, page } = req.query as any;
-    const opts: any = {};
-    if (limit) opts.take = Number(limit);
-    if (skip) opts.skip = Number(skip);
+    const query = req.query as any;
+    const { page, limit, skip, take } = getPagination(query);
+
+    const opts: any = { skip, take };
+
+    // search by name or description
+    const search = String(query.search || "").trim();
+    if (search) {
+      opts.where = {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ],
+      };
+    }
+
+    // map sort param to orderBy
+    const sort = String(query.sort || "").trim();
+    if (sort) {
+      switch (sort) {
+        case "newest":
+          opts.orderBy = { createdAt: "desc" };
+          break;
+        default:
+          if (/^[a-zA-Z0-9_]+_(asc|desc)$/.test(sort)) {
+            const [field, dir] = sort.split("_");
+            opts.orderBy = { [field]: dir as "asc" | "desc" };
+          }
+          break;
+      }
+    }
+
     const providers = await ProvidersService.list(opts);
     return success(res, providers);
   }),
