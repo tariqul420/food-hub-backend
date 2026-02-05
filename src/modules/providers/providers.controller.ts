@@ -7,7 +7,7 @@ import { ProvidersService } from "./providers.service";
 export const ProvidersController = {
   list: asyncHandler(async (req: Request, res: Response) => {
     const query = req.query as any;
-    const { page, limit, skip, take } = getPagination(query);
+    const { skip, take } = getPagination(query);
 
     const opts: any = { skip, take };
 
