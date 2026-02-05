@@ -1,8 +1,19 @@
 import { getPagination } from "../../shared/utils/pagination";
 import { MealsRepository } from "./meals.repository";
 
+// simple in-memory cache for list endpoints
+const cache: Record<string, { ts: number; data: any }> = {};
+const TTL = 30 * 1000; // 30 seconds
+
 export const MealsService = {
-  list: (filters: any) => MealsRepository.find(filters),
+  list: async (filters: any) => {
+    const key = `meals:${JSON.stringify(filters || {})}`;
+    const now = Date.now();
+    if (cache[key] && now - cache[key].ts < TTL) return cache[key].data;
+    const data = await MealsRepository.find(filters || {});
+    cache[key] = { ts: now, data };
+    return data;
+  },
   listByProvider: async (providerId: string, query: any = {}) => {
     const { page, limit, skip, take } = getPagination(query);
 

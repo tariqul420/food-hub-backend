@@ -8,5 +8,6 @@ const router = Router();
 
 router.post("/", authorize(UserRole.CUSTOMER), ReviewsController.create);
 router.get("/meal/:mealId", ReviewsController.listByMeal);
+router.get("/recent", ReviewsController.listRecent);
 
 export { router as reviewsRoutes };

@@ -11,9 +11,15 @@ export const MealsRepository = {
       where.isAvailable = filters.isAvailable === "true";
     }
     if (filters.q) where.title = { contains: filters.q, mode: "insensitive" };
+    const take = filters.take || filters.limit || undefined;
+    const skip = filters.skip || undefined;
+    const orderBy = filters.orderBy || { updatedAt: "desc" };
     return prisma.meal.findMany({
       where,
       include: { provider: true, category: true },
+      take,
+      skip,
+      orderBy,
     });
   },
   findByProvider: async (

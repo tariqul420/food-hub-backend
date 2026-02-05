@@ -1,8 +1,15 @@
 import { prisma } from "../../database/prisma";
 
 export const ProvidersRepository = {
-  findMany: () =>
-    prisma.providerProfile.findMany({ where: { isActive: true } }),
+  findMany: (
+    opts: { where?: any; skip?: number; take?: number; orderBy?: any } = {},
+  ) =>
+    prisma.providerProfile.findMany({
+      where: { ...(opts.where || {}), isActive: true },
+      skip: opts.skip,
+      take: opts.take,
+      orderBy: opts.orderBy,
+    }),
   findById: (id: string) =>
     prisma.providerProfile.findUnique({
       where: { id },

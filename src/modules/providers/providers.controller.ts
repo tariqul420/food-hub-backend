@@ -4,8 +4,12 @@ import { fail, success } from "../../shared/utils/response";
 import { ProvidersService } from "./providers.service";
 
 export const ProvidersController = {
-  list: asyncHandler(async (_req: Request, res: Response) => {
-    const providers = await ProvidersService.list();
+  list: asyncHandler(async (req: Request, res: Response) => {
+    const { limit, skip, page } = req.query as any;
+    const opts: any = {};
+    if (limit) opts.take = Number(limit);
+    if (skip) opts.skip = Number(skip);
+    const providers = await ProvidersService.list(opts);
     return success(res, providers);
   }),
 
