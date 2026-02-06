@@ -53,7 +53,45 @@ var prisma = new PrismaClient({ adapter });
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 // src/modules/auth/auth.ts
-var auth = void 0;
+var auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "postgresql"
+  }),
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins: [process.env.APP_URL],
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "CUSTOMER",
+        required: true
+      }
+    }
+  },
+  emailAndPassword: {
+    enabled: true
+  },
+  rateLimit: {
+    window: 10,
+    max: 100
+  },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"]
+    }
+  },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 60 * 24 * 7
+    },
+    expiresIn: 60 * 60 * 24 * 7,
+    updateAge: 60 * 60 * 24,
+    cookieName: "better-auth.session_token"
+  }
+});
 
 // src/routes/index.ts
 import { Router as Router7 } from "express";
@@ -214,7 +252,7 @@ import { Router as Router2 } from "express";
 
 // src/modules/meals/meals.repository.ts
 var MealsRepository = {
-  find: (filters) => {
+  find: (filters = {}) => {
     const where = {};
     if (filters.providerProfileId) {
       where.providerProfileId = filters.providerProfileId;
@@ -229,8 +267,8 @@ var MealsRepository = {
     }
     const rawTake = filters.take ?? filters.limit ?? void 0;
     const rawSkip = filters.skip ?? void 0;
-    const take = rawTake != null ? Number(rawTake) : void 0;
-    const skip = rawSkip != null ? Number(rawSkip) : void 0;
+    const take = rawTake !== null ? Number(rawTake) : void 0;
+    const skip = rawSkip !== null ? Number(rawSkip) : void 0;
     let orderBy = filters.orderBy || { updatedAt: "desc" };
     if (typeof filters.sort === "string") {
       switch (filters.sort) {
@@ -251,13 +289,18 @@ var MealsRepository = {
           break;
       }
     }
-    return prisma.meal.findMany({
+    const findOptions = {
       where,
       include: { provider: true, category: true },
-      take,
-      skip,
       orderBy
-    });
+    };
+    if (typeof take === "number" && !Number.isNaN(take)) {
+      findOptions.take = take;
+    }
+    if (typeof skip === "number" && !Number.isNaN(skip)) {
+      findOptions.skip = skip;
+    }
+    return prisma.meal.findMany(findOptions);
   },
   findByProvider: async (providerId, opts = {}) => {
     const provider = await prisma.providerProfile.findFirst({

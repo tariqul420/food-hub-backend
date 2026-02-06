@@ -1,7 +1,7 @@
 import { prisma } from "../../database/prisma";
 
 export const MealsRepository = {
-  find: (filters: any) => {
+  find: (filters: any = {}) => {
     const where: any = {};
 
     if (filters.providerProfileId) {
@@ -19,8 +19,8 @@ export const MealsRepository = {
 
     const rawTake = filters.take ?? filters.limit ?? undefined;
     const rawSkip = filters.skip ?? undefined;
-    const take = rawTake != null ? Number(rawTake) : undefined;
-    const skip = rawSkip != null ? Number(rawSkip) : undefined;
+    const take = rawTake !== null ? Number(rawTake) : undefined;
+    const skip = rawSkip !== null ? Number(rawSkip) : undefined;
 
     let orderBy: any = filters.orderBy || { updatedAt: "desc" };
     if (typeof filters.sort === "string") {
@@ -43,13 +43,20 @@ export const MealsRepository = {
       }
     }
 
-    return prisma.meal.findMany({
+    const findOptions: any = {
       where,
       include: { provider: true, category: true },
-      take,
-      skip,
       orderBy,
-    });
+    };
+
+    if (typeof take === "number" && !Number.isNaN(take)) {
+      findOptions.take = take;
+    }
+    if (typeof skip === "number" && !Number.isNaN(skip)) {
+      findOptions.skip = skip;
+    }
+
+    return prisma.meal.findMany(findOptions);
   },
   findByProvider: async (
     providerId: string,
