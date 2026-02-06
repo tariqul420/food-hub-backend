@@ -57,7 +57,7 @@ var auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql"
   }),
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: process.env.BETTER_AUTH_URL || "https://foodhubx.vercel.app",
   secret: process.env.BETTER_AUTH_SECRET,
   trustedOrigins: [process.env.APP_URL],
   user: {
