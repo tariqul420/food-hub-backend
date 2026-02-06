@@ -47,7 +47,7 @@ import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 var globalForPrisma = globalThis;
-var connectionString = `${process.env.DATABASE_URL}`;
+var connectionString = process.env.DATABASE_URL ?? "";
 var adapter = new PrismaPg({ connectionString });
 var prisma = new PrismaClient({ adapter });
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
@@ -57,9 +57,9 @@ var auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql"
   }),
-  baseURL: process.env.BETTER_AUTH_URL || "https://foodhubx.vercel.app",
+  baseURL: process.env.BETTER_AUTH_URL || "https://foodhub-b.vercel.app",
   secret: process.env.BETTER_AUTH_SECRET,
-  trustedOrigins: [process.env.APP_URL],
+  trustedOrigins: [process.env.SITE_URL || "https://foodhubx.vercel.app"],
   user: {
     additionalFields: {
       role: {
