@@ -38,6 +38,19 @@ import { prisma } from "../../database/prisma";
      },
      expiresIn: 60 * 60 * 24 * 7,
      updateAge: 60 * 60 * 24,
-     cookieName: "better-auth.session_token",
+     cookieName:
+       process.env.NODE_ENV === "production"
+         ? "__Secure-better-auth.session_token"
+         : "better-auth.session_token",
+     cookie: {
+       name:
+         process.env.NODE_ENV === "production"
+           ? "__Secure-better-auth.session_token"
+           : "better-auth.session_token",
+       path: "/",
+       sameSite: "none",
+       secure: process.env.NODE_ENV === "production",
+       domain: process.env.BETTER_AUTH_COOKIE_DOMAIN || undefined,
+     },
    },
  });
