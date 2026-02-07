@@ -7,6 +7,11 @@ const origin = env.isProduction
     : false
   : true;
 
-const cors = createCors({ origin, credentials: true });
+const cors = createCors({
+  origin,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+});
 
 export { cors };

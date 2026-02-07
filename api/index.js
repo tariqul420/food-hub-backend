@@ -17,7 +17,12 @@ var env = {
 
 // src/config/cors.ts
 var origin = env.isProduction ? process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim()) : false : true;
-var cors = createCors({ origin, credentials: true });
+var cors = createCors({
+  origin,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+});
 
 // src/config/helmet.ts
 import createHelmet from "helmet";
@@ -71,6 +76,13 @@ var auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true
+  },
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "None",
+      secure: true,
+      httpOnly: true
+    }
   }
 });
 
