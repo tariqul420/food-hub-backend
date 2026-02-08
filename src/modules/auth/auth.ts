@@ -21,11 +21,4 @@ import { prisma } from "../../database/prisma";
    emailAndPassword: {
      enabled: true,
    },
-   advanced: {
-     defaultCookieAttributes: {
-       sameSite: "None",
-       secure: true,
-       httpOnly: true,
-     },
-   },
  });
