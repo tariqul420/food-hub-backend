@@ -6,7 +6,9 @@ import { prisma } from "../../database/prisma";
    database: prismaAdapter(prisma, {
      provider: "postgresql",
    }),
-   baseURL: process.env.BETTER_AUTH_URL || "https://foodhub-b.vercel.app",
+   baseURL:
+     process.env.BETTER_AUTH_URL ||
+     "https://food-hub-backend-ykcc.onrender.com",
    secret: process.env.BETTER_AUTH_SECRET,
    trustedOrigins: [process.env.SITE_URL || "https://foodhubx.vercel.app"],
    user: {
