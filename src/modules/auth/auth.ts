@@ -10,7 +10,7 @@ import { prisma } from "../../database/prisma";
      process.env.BETTER_AUTH_URL ||
      "https://food-hub-backend-ykcc.onrender.com",
    secret: process.env.BETTER_AUTH_SECRET,
-   trustedOrigins: [process.env.SITE_URL || "https://foodhubx.vercel.app"],
+   trustedOrigins: [process.env.SITE_URL || "https://foodhub.tariqul.dev"],
    user: {
      additionalFields: {
        role: {
