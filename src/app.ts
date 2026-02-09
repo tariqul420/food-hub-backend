@@ -27,6 +27,62 @@ app.all("/api/auth/*splat", (req: Request, res: Response) => {
   if (!auth) {
     return res.status(503).json({ success: false, message: "Auth not ready" });
   }
+
+  const originalSetHeader = res.setHeader.bind(res);
+
+  const sessionCookieNameRE =
+    /^\s*(?:better-auth\.session_token|__secure-better-auth\.session_token|better-auth_session_token)\s*=/i;
+
+  function deriveCookieDomain(req: Request) {
+    if (process.env.COOKIE_DOMAIN) return process.env.COOKIE_DOMAIN;
+    const host = (req.hostname || String(req.headers.host || "")).split(":")[0];
+    if (!host) return "";
+    const parts = host.split(".");
+    if (parts.length >= 2) {
+      return `.${parts.slice(-2).join(".")}`;
+    }
+    return host;
+  }
+
+  function rewriteSetCookieValue(setCookieValue: string, cookieDomain: string) {
+    const nameValue = setCookieValue.split(/;\s*/)[0];
+    const attrs = ["Path=/"];
+    if (cookieDomain) attrs.push(`Domain=${cookieDomain}`);
+    attrs.push("Secure", "SameSite=None");
+    return [nameValue, ...attrs].join("; ");
+  }
+
+  res.setHeader = (
+    name: string,
+    value: number | string | ReadonlyArray<string>,
+  ) => {
+    if (typeof name === "string" && name.toLowerCase() === "set-cookie") {
+      const cookieDomain = deriveCookieDomain(req);
+      const cookies = Array.isArray(value) ? value.slice() : [String(value)];
+      const rewritten = cookies.map((c) => {
+        if (sessionCookieNameRE.test(c)) {
+          return rewriteSetCookieValue(c, cookieDomain);
+        }
+        return c;
+      });
+      return originalSetHeader(
+        "Set-Cookie",
+        rewritten as unknown as string | string[],
+      );
+    }
+    return originalSetHeader(name, value as any);
+  };
+
+  const cleanup = () => {
+    try {
+      res.setHeader = originalSetHeader as unknown as typeof res.setHeader;
+    } catch {
+      // ignore
+    }
+  };
+  res.once("finish", cleanup);
+  res.once("close", cleanup);
+
   return toNodeHandler(auth)(req, res);
 });
 
