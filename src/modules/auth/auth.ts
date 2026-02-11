@@ -6,9 +6,7 @@ import { prisma } from "../../database/prisma";
    database: prismaAdapter(prisma, {
      provider: "postgresql",
    }),
-   baseURL:
-     process.env.BETTER_AUTH_URL ||
-     "https://food-hub-backend-ykcc.onrender.com",
+   baseURL: process.env.BETTER_AUTH_URL || "https://foodhub-api.tariqul.dev",
    secret: process.env.BETTER_AUTH_SECRET,
    trustedOrigins: [process.env.SITE_URL || "https://foodhub.tariqul.dev"],
    user: {
@@ -22,5 +20,12 @@ import { prisma } from "../../database/prisma";
    },
    emailAndPassword: {
      enabled: true,
+   },
+   cookie: {
+     httpOnly: true,
+     secure: true,
+     sameSite: "lax",
+     domain: ".tariqul.dev",
+     path: "/",
    },
  });
