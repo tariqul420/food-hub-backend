@@ -23,9 +23,9 @@ import { prisma } from "../../database/prisma";
    },
    cookie: {
      httpOnly: true,
-     secure: true,
+     secure: process.env.NODE_ENV === "production",
      sameSite: "lax",
-     domain: ".tariqul.dev",
+     domain: process.env.NODE_ENV === "production" ? ".tariqul.dev" : undefined,
      path: "/",
    },
  });
