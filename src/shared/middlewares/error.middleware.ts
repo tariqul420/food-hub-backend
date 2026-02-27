@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { env } from "../../config/env";
+import { envVars } from "../../config/env";
 
 export const errorHandler = (
   err: any,
@@ -15,7 +15,7 @@ export const errorHandler = (
     message: errorMessage,
   };
 
-  if (!env.isProduction) {
+  if (!envVars.isProduction) {
     payload.errors = err?.stack || err;
   }
 

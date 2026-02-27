@@ -1,11 +1,10 @@
 import createCors from "cors";
-import { env } from "./env";
 
-const origin = env.isProduction
-  ? process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
-    : false
-  : true;
+const origin = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://food-hub-frontend.vercel.app",
+];
 
 const cors = createCors({
   origin,
