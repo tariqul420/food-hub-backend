@@ -3,7 +3,8 @@ import createCors from "cors";
 const origin = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://food-hub-frontend.vercel.app",
+  "https://foodhubx.vercel.app",
+  "https://foodhub.tariqul.dev",
 ];
 
 const cors = createCors({
