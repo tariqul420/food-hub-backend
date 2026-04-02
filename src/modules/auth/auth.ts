@@ -11,6 +11,8 @@ import { prisma } from "../../database/prisma";
    trustedOrigins: [
      "https://foodhubx.vercel.app",
      "https://foodhub.tariqul.dev",
+     "http://localhost:5173",
+     "http://localhost:3000",
    ],
    user: {
      additionalFields: {
